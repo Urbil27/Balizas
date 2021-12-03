@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-    private List<Baliza> balizas;
+    private List<Baliza> balizas = new ArrayList<Baliza>();
 
 
     private Context context;

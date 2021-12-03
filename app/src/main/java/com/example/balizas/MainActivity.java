@@ -39,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "balizas").build();
+                AppDatabase.class, "balizas")
+                .fallbackToDestructiveMigration()
+                .build();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

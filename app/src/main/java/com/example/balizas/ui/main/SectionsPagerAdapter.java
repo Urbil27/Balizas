@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.balizas.database.AppDatabase;
 import com.example.balizas.fragmentoBalizas.BalizasFragment;
 import com.example.balizas.DatosFragment;
-import com.example.balizas.MapaFragment;
+import com.example.balizas.fragmetoMapa.MapaFragment;
 import com.example.balizas.R;
 
 import org.json.JSONArray;
