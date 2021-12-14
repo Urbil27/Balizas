@@ -11,8 +11,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.balizas.database.AppDatabase;
 import com.example.balizas.fragmentoBalizas.BalizasFragment;
 import com.example.balizas.DatosFragment;
-import com.example.balizas.fragmetoMapa.MapaFragment;
 import com.example.balizas.R;
+import com.example.balizas.fragmetoMapa.MapsFragment;
 
 import org.json.JSONArray;
 
@@ -48,7 +48,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 fragment = new DatosFragment();
                 break;
             case 2:
-                fragment = new MapaFragment();
+                fragment = new MapsFragment();
+
                 break;
         }
         return fragment;

@@ -23,5 +23,7 @@ public class Baliza {
     public double y;
     @ColumnInfo(name = "stationType")
     public double stationType;
+    @ColumnInfo(name = "activated")
+    public boolean activated;
 
 }

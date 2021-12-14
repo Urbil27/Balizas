@@ -1,15 +1,19 @@
 package com.example.balizas.fragmentoBalizas;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.balizas.MainActivity;
 import com.example.balizas.R;
 import com.example.balizas.database.Baliza;
 
@@ -17,28 +21,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-    private List<Baliza> balizas = new ArrayList<Baliza>();
+    private List<Baliza> balizas;
 
 
     private Context context;
     private LayoutInflater mInflater;
-    public RecyclerAdapter(Context context, List<Baliza> balizas){
+    private Handler handler;
+    public RecyclerAdapter(Context context, List<Baliza> balizas, Handler handler){
         this.balizas = balizas;
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
+        this.handler = handler;
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
        private final TextView tvBaliza;
+       private final Switch switch1;
         public View view;
         public ViewHolder(View view) {
             super(view);
             this.view = view;
             tvBaliza = view.findViewById(R.id.textView);
+            switch1 = view.findViewById(R.id.switch1);
         }
         //Devuelve el textview del nombre de la baliza
         public TextView getTVBaliza(){
             return tvBaliza;
         }
+        public Switch getSwitchBaliza(){return switch1;}
     }
     public void setBalizas(List<Baliza> balizas){
         this.balizas = balizas;
@@ -46,6 +55,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.recycler_balizas, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -54,6 +64,39 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
         Baliza baliza = balizas.get(position);
         holder.getTVBaliza().setText(baliza.balizaName);
+        Switch switch1 = holder.getSwitchBaliza();
+        if(baliza.activated){
+            switch1.setChecked(true);
+        }
+        holder.switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+
+                if (compoundButton.isChecked() == true){
+                    baliza.activated = true;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println(baliza.balizaName);
+                            MainActivity.db.balizaDao().update(baliza);
+                        }
+                    });
+
+                }else {
+                    baliza.activated = false;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println(baliza.balizaName);
+                            MainActivity.db.balizaDao().update(baliza);
+                        }
+                    });
+                }
+
+            }
+        });
+
     }
     @Override
     public int getItemCount() {

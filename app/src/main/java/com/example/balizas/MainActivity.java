@@ -48,18 +48,13 @@ public class MainActivity extends AppCompatActivity {
 
         //Volley
 
-        // ...
-
-        // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "https://www.euskalmet.euskadi.eus/vamet/stations/stationList/stationList.json";
 
-        // Request a string response from the provided URL.
         JsonArrayRequest stringRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray jsonArray) {
-                        // Display the first 500 characters of the response string.
                         // textView.setText("Response is: "+ response.substring(0,500));
 
                         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(
@@ -78,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Add the request to the RequestQueue.
+
         queue.add(stringRequest);
     }
 }

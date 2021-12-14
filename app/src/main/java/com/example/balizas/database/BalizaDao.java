@@ -6,6 +6,8 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
+
 import com.example.balizas.database.Baliza;
 import java.util.List;
 @Dao
@@ -20,6 +22,8 @@ public interface BalizaDao {
     Baliza findByName(String first, String last);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Baliza... balizas);
+    @Update
+    int update(Baliza baliza);
     @Delete
     void delete(Baliza baliza);
 }

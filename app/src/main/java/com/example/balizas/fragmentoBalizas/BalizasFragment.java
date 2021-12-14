@@ -44,7 +44,7 @@ public class BalizasFragment extends Fragment {
     private String mParam2;
     private JSONArray jsonArray;
 
-    private ArrayList<Baliza> balizas;
+    private List<Baliza> balizas = new ArrayList<>();
     private Context context;
     public BalizasFragment() {
         // Required empty public constructor
@@ -114,8 +114,6 @@ public class BalizasFragment extends Fragment {
                         baliza.x = Double.parseDouble(object.getString("x"));
                         baliza.y = Double.parseDouble(object.getString("y"));
                         baliza.altitude = Double.parseDouble(object.getString("altitude"));
-                        System.out.println("----------------------------------------------------");
-                        //  balizas.add(baliza);
                         MainActivity.db.balizaDao().insertAll(baliza);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -125,15 +123,16 @@ public class BalizasFragment extends Fragment {
         });
 
         BalizasViewModel bvm = new BalizasViewModel();
-        RecyclerAdapter ra = new RecyclerAdapter(context,balizas);
+        RecyclerAdapter ra = new RecyclerAdapter(context,balizas, handler);
         rv.setLayoutManager(new LinearLayoutManager(context));
         rv.setAdapter(ra);
         bvm.getBalizas().observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
             @Override
             public void onChanged(List<Baliza> balizas) {
-
-                ra.setBalizas(balizas);
-                ra.notifyDataSetChanged();
+                if(balizas != null){
+                    ra.setBalizas(balizas);
+                    ra.notifyDataSetChanged();
+                }
             }
         });
         return view;
