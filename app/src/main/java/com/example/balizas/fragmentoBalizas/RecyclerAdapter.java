@@ -65,7 +65,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         Baliza baliza = balizas.get(position);
         holder.getTVBaliza().setText(baliza.balizaName);
         Switch switch1 = holder.getSwitchBaliza();
-        if(baliza.activated){
+        if(baliza.activated == true){
             switch1.setChecked(true);
         }
         holder.switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -80,6 +80,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         public void run() {
                             System.out.println(baliza.balizaName);
                             MainActivity.db.balizaDao().update(baliza);
+                            System.out.println("Updated on database");
                         }
                     });
 
@@ -98,6 +99,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         });
 
     }
+    @Override public int getItemViewType(int position) { return position; }
+
+
     @Override
     public int getItemCount() {
         System.out.println(balizas.size());
