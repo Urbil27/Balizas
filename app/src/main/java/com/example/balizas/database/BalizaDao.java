@@ -15,15 +15,15 @@ public interface BalizaDao {
 
     @Query("SELECT * FROM baliza")
     LiveData<List<Baliza>> getAll();
-    @Query("SELECT * FROM baliza WHERE id IN (:userIds)")
-    List<Baliza> loadAllByIds(int[] userIds);
+    @Query("SELECT * FROM baliza WHERE id IN (:userId)")
+    List<Baliza> loadAllByIds(String userId);
     @Query("SELECT * FROM baliza WHERE id LIKE :first AND " +
             "name LIKE :last LIMIT 1")
     Baliza findByName(String first, String last);
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(Baliza... balizas);
     @Update
-    int update(Baliza baliza);
+    void update(Baliza baliza);
     @Delete
     void delete(Baliza baliza);
 }

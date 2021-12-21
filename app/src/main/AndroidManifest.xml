@@ -32,7 +32,7 @@
             android:value="AIzaSyDANQK7UYvd8Pkhv5QUVhY5bmnu2eco2fc" />
 
         <activity
-            android:name="MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Balizas.NoActionBar">

@@ -4,22 +4,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.balizas.BalizasViewModel;
 import com.example.balizas.R;
 import com.example.balizas.database.Baliza;
-import com.example.balizas.fragmentoBalizas.BalizasViewModel;
+import com.example.balizas.fragmentoBalizas.RecyclerAdapter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapsFragment extends Fragment {
@@ -38,20 +42,24 @@ public class MapsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             BalizasViewModel bvm = new BalizasViewModel();
+
             bvm.getBalizas().observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
                 @Override
                 public void onChanged(List<Baliza> balizas) {
                     if(balizas != null){
-                        for(Baliza baliza :balizas) {
-                            LatLng sydney = new LatLng(baliza.y, baliza.x);
-                            System.out.println("Y:"+baliza.y+"X:"+baliza.x);
-                            googleMap.addMarker(new MarkerOptions().position(sydney).title(baliza.balizaName));
+                        for(Baliza b : balizas){
+                            LatLng sydney = new LatLng(b.y, b.x);
+                            if(b.activated){
+                                googleMap.addMarker(new MarkerOptions().position(sydney).title(b.balizaName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            }
+                            else{
+                                googleMap.addMarker(new MarkerOptions().position(sydney).title(b.balizaName));
+                            }
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                         }
                     }
                 }
             });
-
         }
     };
 
@@ -60,12 +68,14 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
+
+        return inflater.inflate(R.layout.fragment_maps2, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {

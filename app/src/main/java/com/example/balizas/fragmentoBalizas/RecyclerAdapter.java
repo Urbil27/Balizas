@@ -27,12 +27,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private Context context;
     private LayoutInflater mInflater;
     private Handler handler;
+
     public RecyclerAdapter(Context context, List<Baliza> balizas, Handler handler){
         this.balizas = balizas;
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
         this.handler = handler;
     }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
        private final TextView tvBaliza;
        private final Switch switch1;
@@ -65,36 +67,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         Baliza baliza = balizas.get(position);
         holder.getTVBaliza().setText(baliza.balizaName);
         Switch switch1 = holder.getSwitchBaliza();
-        if(baliza.activated == true){
-            switch1.setChecked(true);
-        }
+        switch1.setChecked(baliza.activated);
+
+
         holder.switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-
-                if (compoundButton.isChecked() == true){
-                    baliza.activated = true;
+                    baliza.activated = isChecked;
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            System.out.println(baliza.balizaName);
+                            System.out.println("ID DE LA BALIZA:"+baliza.id);
                             MainActivity.db.balizaDao().update(baliza);
                             System.out.println("Updated on database");
                         }
                     });
-
-                }else {
-                    baliza.activated = false;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            System.out.println(baliza.balizaName);
-                            MainActivity.db.balizaDao().update(baliza);
-                        }
-                    });
-                }
-
             }
         });
 
@@ -104,7 +92,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        System.out.println(balizas.size());
         return balizas.size();
     }
 }

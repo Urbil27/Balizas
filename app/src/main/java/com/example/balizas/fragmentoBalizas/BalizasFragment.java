@@ -7,15 +7,14 @@ import android.os.HandlerThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.balizas.BalizasViewModel;
 import com.example.balizas.MainActivity;
 import com.example.balizas.R;
-import com.example.balizas.database.AppDatabase;
 import com.example.balizas.database.Baliza;
 
 import org.json.JSONArray;
@@ -103,7 +102,9 @@ public class BalizasFragment extends Fragment {
             public void run() {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     try {
+
                         JSONObject object = (JSONObject) jsonArray.get(i);
+
                         System.out.println(object.toString());
                         Baliza baliza = new Baliza();
                         baliza.id = object.getString("id");
@@ -115,6 +116,7 @@ public class BalizasFragment extends Fragment {
                         baliza.y = Double.parseDouble(object.getString("y"));
                         baliza.altitude = Double.parseDouble(object.getString("altitude"));
                         MainActivity.db.balizaDao().insertAll(baliza);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
