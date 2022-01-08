@@ -7,11 +7,14 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.balizas.BalizasViewModel;
+import com.example.balizas.MainActivity;
 import com.example.balizas.R;
 import com.example.balizas.database.Baliza;
 import com.example.balizas.fragmentoBalizas.RecyclerAdapter;
@@ -21,9 +24,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MapsFragment extends Fragment {
@@ -39,6 +44,7 @@ public class MapsFragment extends Fragment {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
+        HashMap<Marker, Baliza> balizasGuardadas;
         @Override
         public void onMapReady(GoogleMap googleMap) {
             BalizasViewModel bvm = new BalizasViewModel();
@@ -46,17 +52,49 @@ public class MapsFragment extends Fragment {
             bvm.getBalizas().observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
                 @Override
                 public void onChanged(List<Baliza> balizas) {
+
                     if(balizas != null){
                         for(Baliza b : balizas){
                             LatLng sydney = new LatLng(b.y, b.x);
                             if(b.activated){
-                                googleMap.addMarker(new MarkerOptions().position(sydney).title(b.balizaName).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                Marker marker = googleMap.addMarker(new MarkerOptions().position(sydney)
+                                        .title(b.balizaName).icon(BitmapDescriptorFactory
+                                                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                HashMap<Marker, Baliza> balizaMarcador = new HashMap<Marker,Baliza>();
+                                balizasGuardadas.put(marker,b);
+
                             }
                             else{
-                                googleMap.addMarker(new MarkerOptions().position(sydney).title(b.balizaName));
+                                Marker marker = googleMap.addMarker(new MarkerOptions().position(sydney)
+                                        .title(b.balizaName));
+                                HashMap<Marker, Baliza> balizaMarcador = new HashMap<Marker,Baliza>();
+                                balizasGuardadas.put(marker,b);
                             }
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                         }
+                        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(@NonNull Marker marker) {
+                                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                                HandlerThread hiloCargarBaliza = new HandlerThread("hiloCargarBaliza");
+                                hiloCargarBaliza.start();
+                                Handler cargadorBaliza = new Handler(hiloCargarBaliza.getLooper());
+                                Baliza baliza = balizasGuardadas.get(marker);
+                                if(baliza.activated){
+                                    baliza.activated = false;
+                                }
+                                else{
+                                    baliza.activated=true;
+                                }
+                                cargadorBaliza.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        MainActivity.db.balizaDao().update(baliza);
+                                    }
+                                });
+                                return false;
+                            }
+                        });
                     }
                 }
             });
@@ -81,5 +119,6 @@ public class MapsFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+
     }
 }
