@@ -44,7 +44,7 @@ public class MapsFragment extends Fragment {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
-        HashMap<Marker, Baliza> balizasGuardadas;
+        HashMap<Marker, Baliza> balizasGuardadas = new HashMap<Marker, Baliza>();
         @Override
         public void onMapReady(GoogleMap googleMap) {
             BalizasViewModel bvm = new BalizasViewModel();
