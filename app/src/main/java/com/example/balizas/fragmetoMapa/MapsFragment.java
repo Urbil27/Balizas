@@ -60,14 +60,12 @@ public class MapsFragment extends Fragment {
                                 Marker marker = googleMap.addMarker(new MarkerOptions().position(sydney)
                                         .title(b.balizaName).icon(BitmapDescriptorFactory
                                                 .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                                HashMap<Marker, Baliza> balizaMarcador = new HashMap<Marker,Baliza>();
                                 balizasGuardadas.put(marker,b);
 
                             }
                             else{
                                 Marker marker = googleMap.addMarker(new MarkerOptions().position(sydney)
                                         .title(b.balizaName));
-                                HashMap<Marker, Baliza> balizaMarcador = new HashMap<Marker,Baliza>();
                                 balizasGuardadas.put(marker,b);
                             }
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
