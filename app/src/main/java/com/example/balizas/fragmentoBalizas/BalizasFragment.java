@@ -4,9 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -94,6 +97,9 @@ public class BalizasFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_balizas, container, false);
+        EditText buscador = view.findViewById(R.id.editTextBaliza);
+        buscador.setHint("Buscar...");
+
         //System.out.println(response);
         RecyclerView rv = view.findViewById(R.id.rv);
         //rv.setAdapter(new RecyclerAdapter(response));
@@ -128,6 +134,7 @@ public class BalizasFragment extends Fragment {
         RecyclerAdapter ra = new RecyclerAdapter(context,balizas, handler);
         rv.setLayoutManager(new LinearLayoutManager(context));
         rv.setAdapter(ra);
+
         bvm.getBalizas().observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
             @Override
             public void onChanged(List<Baliza> balizas) {
@@ -135,6 +142,33 @@ public class BalizasFragment extends Fragment {
                     ra.setBalizas(balizas);
                     ra.notifyDataSetChanged();
                 }
+            }
+        });
+        buscador.addTextChangedListener(new TextWatcher() {
+            List<Baliza> balizasToShow = new ArrayList<Baliza>();
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                System.out.println(s.toString());
+                for(Baliza baliza : balizas){
+                    System.out.println("Entro en el foreach");
+                    if(baliza.balizaName.equals(s.toString())){
+
+                        balizasToShow.add(baliza);
+                        System.out.println(baliza.balizaName);
+                    }
+                    ra.setBalizas(balizas);
+                    ra.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
         return view;

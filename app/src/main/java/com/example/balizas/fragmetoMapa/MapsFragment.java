@@ -45,6 +45,7 @@ public class MapsFragment extends Fragment {
          * user has installed Google Play services and returned to the app.
          */
         HashMap<Marker, Baliza> balizasGuardadas = new HashMap<Marker, Baliza>();
+
         @Override
         public void onMapReady(GoogleMap googleMap) {
             BalizasViewModel bvm = new BalizasViewModel();
@@ -53,23 +54,24 @@ public class MapsFragment extends Fragment {
                 @Override
                 public void onChanged(List<Baliza> balizas) {
 
-                    if(balizas != null){
-                        for(Baliza b : balizas){
+                    if (balizas != null) {
+                        for (Baliza b : balizas) {
                             LatLng sydney = new LatLng(b.y, b.x);
-                            if(b.activated){
+                            if (b.activated) {
                                 Marker marker = googleMap.addMarker(new MarkerOptions().position(sydney)
                                         .title(b.balizaName).icon(BitmapDescriptorFactory
                                                 .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                                balizasGuardadas.put(marker,b);
+                                balizasGuardadas.put(marker, b);
 
-                            }
-                            else{
+                            } else {
                                 Marker marker = googleMap.addMarker(new MarkerOptions().position(sydney)
                                         .title(b.balizaName));
-                                balizasGuardadas.put(marker,b);
+                                balizasGuardadas.put(marker, b);
                             }
                             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                         }
+                        LatLng loc = new LatLng(43.035827, -2.473771);
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 8), 5000, null);;
                         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(@NonNull Marker marker) {
@@ -78,11 +80,10 @@ public class MapsFragment extends Fragment {
                                 hiloCargarBaliza.start();
                                 Handler cargadorBaliza = new Handler(hiloCargarBaliza.getLooper());
                                 Baliza baliza = balizasGuardadas.get(marker);
-                                if(baliza.activated){
+                                if (baliza.activated) {
                                     baliza.activated = false;
-                                }
-                                else{
-                                    baliza.activated=true;
+                                } else {
+                                    baliza.activated = true;
                                 }
                                 cargadorBaliza.post(new Runnable() {
                                     @Override
@@ -92,6 +93,7 @@ public class MapsFragment extends Fragment {
                                 });
                                 return false;
                             }
+
                         });
                     }
                 }
