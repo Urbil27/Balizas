@@ -27,4 +27,6 @@ public interface BalizaDao {
     void update(Baliza baliza);
     @Delete
     void delete(Baliza baliza);
+
+
 }

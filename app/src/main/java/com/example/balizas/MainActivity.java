@@ -10,6 +10,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.balizas.database.AppDatabase;
+import com.example.balizas.database.ReadingDao;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 AppDatabase.class, "balizas")
                 .fallbackToDestructiveMigration()
                 .build();
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

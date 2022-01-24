@@ -110,8 +110,6 @@ public class BalizasFragment extends Fragment {
                     try {
 
                         JSONObject object = (JSONObject) jsonArray.get(i);
-
-                        System.out.println(object.toString());
                         Baliza baliza = new Baliza();
                         baliza.id = object.getString("id");
                         baliza.balizaName = object.getString("name");

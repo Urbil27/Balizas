@@ -1,68 +1,80 @@
 package com.example.balizas.fragmentoDatos;
 
+import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.balizas.MainActivity;
+import com.example.balizas.R;
+import com.example.balizas.database.Baliza;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+    private List<Baliza> balizas;
 
-    private String[] localDataSet;
 
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
+    private Context context;
+    private LayoutInflater mInflater;
+    private Handler handler;
+
+    public RecyclerAdapter(Context context, List<Baliza> balizas, Handler handler){
+        this.balizas = balizas;
+        this.context = context;
+        this.mInflater = LayoutInflater.from(context);
+        this.handler = handler;
+    }
+
+
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
-
+        private final TextView tvBaliza;
+        private final Switch switch1;
+        public View view;
         public ViewHolder(View view) {
             super(view);
-            // Define click listener for the ViewHolder's View
-
-            textView = (TextView) view.findViewById(R.id.textView);
+            this.view = view;
+            tvBaliza = view.findViewById(R.id.textView);
+            switch1 = view.findViewById(R.id.switch1);
         }
-
-        public TextView getTextView() {
-            return textView;
+        //Devuelve el textview del nombre de la baliza
+        public TextView getTVBaliza(){
+            return tvBaliza;
         }
+        public Switch getSwitchBaliza(){return switch1;}
     }
-
-    /**
-     * Initialize the dataset of the Adapter.
-     *
-     * @param dataSet String[] containing the data to populate views to be used
-     * by RecyclerView.
-     */
-    public RecyclerAdapter(String[] dataSet) {
-        localDataSet = dataSet;
+    public void setBalizas(List<Baliza> balizas){
+        this.balizas = balizas;
     }
-
-    // Create new views (invoked by the layout manager)
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Create a new view, which defines the UI of the list item
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.text_row_item, viewGroup, false);
+    public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.recycler_datos, parent, false);
 
         return new ViewHolder(view);
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
+        Baliza baliza = balizas.get(position);
+        holder.getTVBaliza().setText(baliza.balizaName);
 
     }
+    @Override public int getItemViewType(int position) { return position; }
 
 
-
-
-
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return localDataSet.length;
+        return balizas.size();
     }
 }

@@ -1,34 +1,27 @@
 package com.example.balizas.fragmentoDatos;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.balizas.ApiConnection;
-import com.example.balizas.BalizasViewModel;
 import com.example.balizas.MainActivity;
 import com.example.balizas.R;
+import com.example.balizas.communication.ApiConnection;
 import com.example.balizas.database.Baliza;
-import com.example.balizas.ui.main.SectionsPagerAdapter;
-import com.google.android.material.tabs.TabLayout;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,12 +39,12 @@ public class DatosFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    Context context;
-    public DatosFragment(Context context){
-        this.context = context;
-    }
+    private Context context;
     public DatosFragment() {
         // Required empty public constructor
+    }
+    public DatosFragment(Context context) {
+        this.context = context;
     }
 
     /**
@@ -84,52 +77,35 @@ public class DatosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Volley
-        BalizasViewModel balizasViewModel = new BalizasViewModel();
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_datos, container, false);
+        System.out.println("Entro al oncreateview");
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerDatos);
+        HandlerThread handlerThread = new HandlerThread("handlerThread");
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        ApiConnection apiConnection = new ApiConnection(context,handler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        List<Baliza> balizasActivated = new ArrayList<Baliza>() ;
 
-        LiveData<List<Baliza>> balizasLiveData = balizasViewModel.getBalizas();
-        balizasLiveData.observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
+
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(context,balizasActivated,handler);
+
+        MainActivity.db.balizaDao().getAll().observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onChanged(List<Baliza> balizas) {
-                if(balizas != null){
-                    for(Baliza baliza : balizas){
-                        if(baliza.activated){
-                            System.out.println("ID DE LA BALIZA: "+baliza.id);
-                            RequestQueue queue = Volley.newRequestQueue(context);
-                            String url = "https://euskalmet.euskadi.eus/vamet/stations/readings/"+baliza.id+"/2022/01/05/readingsData.json";
-
-                            JsonArrayRequest stringRequest = new JsonArrayRequest(Request.Method.GET, url, null,
-                                    new Response.Listener<JSONArray>() {
-                                        @Override
-                                        public void onResponse(JSONArray jsonArray) {
-                                            // textView.setText("Response is: "+ response.substring(0,500));
-                                            try {
-                                                System.out.println(jsonArray.get(0));
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-
-
-                                        }
-                                    }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-
-                                }
-                            });
-
-
-                            queue.add(stringRequest);
-                        }
+                for(Baliza baliza: balizas){
+                    if(baliza.activated){
+                        balizasActivated.add(baliza);
+                        apiConnection.getBalizaReading(baliza);
+                        recyclerView.setAdapter(recyclerAdapter);
+                        recyclerAdapter.setBalizas(balizasActivated);
+                        recyclerAdapter.notifyDataSetChanged();
                     }
                 }
             }
         });
-
-
-        // Inflate the layout for this fragment
-        ApiConnection connection = new ApiConnection(context);
-        return inflater.inflate(R.layout.fragment_datos, container, false);
+        return view;
     }
-
 }
