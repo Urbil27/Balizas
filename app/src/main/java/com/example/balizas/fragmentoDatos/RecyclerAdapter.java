@@ -55,6 +55,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
     public void setBalizas(List<Baliza> balizas){
         this.balizas = balizas;
+        this.notifyDataSetChanged();
     }
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

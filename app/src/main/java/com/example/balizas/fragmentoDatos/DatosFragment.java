@@ -22,6 +22,7 @@ import com.example.balizas.communication.ApiConnection;
 import com.example.balizas.database.Baliza;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -95,15 +96,16 @@ public class DatosFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onChanged(List<Baliza> balizas) {
+                balizasActivated.clear();
                 for(Baliza baliza: balizas){
                     if(baliza.activated){
                         balizasActivated.add(baliza);
                         apiConnection.getBalizaReading(baliza);
                         recyclerView.setAdapter(recyclerAdapter);
-                        recyclerAdapter.setBalizas(balizasActivated);
-                        recyclerAdapter.notifyDataSetChanged();
+
                     }
                 }
+                recyclerAdapter.setBalizas(balizasActivated);
             }
         });
         return view;
