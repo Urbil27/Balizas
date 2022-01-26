@@ -6,6 +6,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import com.google.type.DateTime;
+
 
 @Entity (foreignKeys = @ForeignKey(entity = Baliza.class, parentColumns = "id", childColumns = "baliza_id", onDelete = ForeignKey.CASCADE))
     public class Reading {
@@ -21,8 +23,8 @@ import androidx.room.PrimaryKey;
         @ColumnInfo(name = "data_type")
         public String dataType;
 
-        @ColumnInfo(name = "time")
-        public String time;
+        @ColumnInfo(name = "datetime")
+        public String datetime;
 
         @ColumnInfo(name = "reading")
         public double reading;

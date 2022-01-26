@@ -19,6 +19,7 @@ import com.example.balizas.communication.Parser;
 import com.example.balizas.database.Baliza;
 import com.example.balizas.ui.main.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
+import com.google.type.DateTime;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +27,8 @@ import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.HashMap;
 
 public class ApiConnection {
     Context context;
@@ -57,7 +60,12 @@ public class ApiConnection {
                         @Override
                         public void run() {
                             Parser parser = new Parser();
-                            parser.parseDatos(response);
+                            Calendar today = Calendar.getInstance();
+                            int day = today.get(Calendar.DAY_OF_MONTH);
+                            int month = today.get(Calendar.MONTH);
+                            int year = today.get(Calendar.YEAR);
+
+                            parser.parseDatos(response, today);
                         }
                     });
 
