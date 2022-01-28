@@ -1,4 +1,4 @@
-package com.example.balizas;
+package com.example.balizas.fragmentoBalizas;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

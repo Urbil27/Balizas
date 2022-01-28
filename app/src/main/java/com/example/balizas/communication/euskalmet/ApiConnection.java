@@ -1,4 +1,4 @@
-package com.example.balizas.communication;
+package com.example.balizas.communication.euskalmet;
 
 import android.content.Context;
 import android.os.Build;
@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.viewpager.widget.ViewPager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,20 +14,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.balizas.communication.Parser;
 import com.example.balizas.database.Baliza;
-import com.example.balizas.ui.main.SectionsPagerAdapter;
-import com.google.android.material.tabs.TabLayout;
-import com.google.type.DateTime;
 
+import org.joda.time.DateTime;
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Date;
 
 public class ApiConnection {
     Context context;
@@ -41,7 +35,25 @@ public class ApiConnection {
 
     }
 
-    public void getData() {
+    public void getBalizas() {
+        String url = "https://www.euskalmet.euskadi.eus/vamet/stations/stationList/stationList.json";
+        JSONArray balizas;
+        JsonArrayRequest stringRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+                        Parser parser = new Parser();
+                        parser.parseBalizas(jsonArray);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+
+        queue.add(stringRequest);
 
     }
 
@@ -55,16 +67,12 @@ public class ApiConnection {
         String myUrl = "https://euskalmet.euskadi.eus/vamet/stations/readings/" + baliza.id + "/" + formattedDate + "/readingsData.json";
         StringRequest myRequest = new StringRequest(Request.Method.GET, myUrl,
                 response -> {
-                    //Create a JSON object containing information from the API.
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
                             Parser parser = new Parser();
-                            Calendar today = Calendar.getInstance();
-                            int day = today.get(Calendar.DAY_OF_MONTH);
-                            int month = today.get(Calendar.MONTH);
-                            int year = today.get(Calendar.YEAR);
-
+                            DateTime today = new DateTime();
                             parser.parseDatos(response, today);
                         }
                     });

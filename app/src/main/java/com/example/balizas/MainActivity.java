@@ -43,39 +43,12 @@ public class MainActivity extends AppCompatActivity {
                 AppDatabase.class, "balizas")
                 .fallbackToDestructiveMigration()
                 .build();
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-
-        //Volley
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://www.euskalmet.euskadi.eus/vamet/stations/stationList/stationList.json";
-
-        JsonArrayRequest stringRequest = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray jsonArray) {
-                        // textView.setText("Response is: "+ response.substring(0,500));
-
-                        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(
-                                MainActivity.this, getSupportFragmentManager(), jsonArray, db);
-                        ViewPager viewPager = binding.viewPager;
-                        viewPager.setAdapter(sectionsPagerAdapter);
-                        TabLayout tabs = binding.tabs;
-                        tabs.setupWithViewPager(viewPager);
-
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-
-        queue.add(stringRequest);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(MainActivity.this, getSupportFragmentManager());
+        ViewPager viewPager = binding.viewPager;
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayout tabs = binding.tabs;
+        tabs.setupWithViewPager(viewPager);
     }
 }

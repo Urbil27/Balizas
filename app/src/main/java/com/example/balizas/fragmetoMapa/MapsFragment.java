@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,11 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.balizas.BalizasViewModel;
+import com.example.balizas.fragmentoBalizas.BalizasViewModel;
 import com.example.balizas.MainActivity;
 import com.example.balizas.R;
 import com.example.balizas.database.Baliza;
-import com.example.balizas.fragmentoBalizas.RecyclerAdapter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,7 +25,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,9 +73,9 @@ public class MapsFragment extends Fragment {
                             @Override
                             public boolean onMarkerClick(@NonNull Marker marker) {
                                 marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                                HandlerThread hiloCargarBaliza = new HandlerThread("hiloCargarBaliza");
-                                hiloCargarBaliza.start();
-                                Handler cargadorBaliza = new Handler(hiloCargarBaliza.getLooper());
+                                HandlerThread htCargarBaliza = new HandlerThread("hiloCargarBaliza");
+                                htCargarBaliza.start();
+                                Handler cargadorBaliza = new Handler(htCargarBaliza.getLooper());
                                 Baliza baliza = balizasGuardadas.get(marker);
                                 if (baliza.activated) {
                                     baliza.activated = false;

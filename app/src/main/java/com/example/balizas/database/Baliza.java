@@ -22,7 +22,7 @@ public class Baliza {
     @ColumnInfo(name = "y")
     public double y;
     @ColumnInfo(name = "stationType")
-    public double stationType;
+    public String stationType;
     @ColumnInfo(name = "activated")
     public boolean activated;
 

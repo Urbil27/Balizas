@@ -64,6 +64,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
         Baliza baliza = balizas.get(position);
         holder.getTVBaliza().setText(baliza.balizaName);
         Switch switch1 = holder.getSwitchBaliza();
@@ -74,15 +75,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
-                    baliza.activated = isChecked;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            System.out.println("ID DE LA BALIZA:"+baliza.id);
-                            MainActivity.db.balizaDao().update(baliza);
-                            System.out.println("Updated on database");
-                        }
-                    });
+                baliza.activated = isChecked;
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("ID DE LA BALIZA:"+baliza.id);
+                        MainActivity.db.balizaDao().update(baliza);
+                        System.out.println("Updated on database");
+                    }
+                });
             }
         });
 

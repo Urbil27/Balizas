@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import com.google.type.DateTime;
+import org.joda.time.DateTime;
 
 
 @Entity (foreignKeys = @ForeignKey(entity = Baliza.class, parentColumns = "id", childColumns = "baliza_id", onDelete = ForeignKey.CASCADE))

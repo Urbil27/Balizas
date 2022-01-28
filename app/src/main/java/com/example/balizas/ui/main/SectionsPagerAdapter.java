@@ -25,14 +25,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
-    private JSONArray jsonArray;
-    private AppDatabase db;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm, JSONArray jsonArray, AppDatabase db) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
-        this.jsonArray = jsonArray;
-        this.db = db;
     }
 
     @Override
@@ -42,7 +38,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new BalizasFragment(mContext, jsonArray);
+                fragment = new BalizasFragment(mContext);
                 break;
             case 1:
                 fragment = new DatosFragment(mContext);
