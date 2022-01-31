@@ -72,6 +72,7 @@ public class Parser {
         try {
             JSONObject jsonObject = new JSONObject(data);
             Iterator<String> iterator = jsonObject.keys();
+            Reading reading = new Reading();
             while (iterator.hasNext()) {
                 String key = iterator.next();
                 JSONObject dataType = jsonObject.getJSONObject(key);
@@ -85,13 +86,31 @@ public class Parser {
                     DateTime defDateTime = DateTime.parse(dateAndTime, dateTimeFormatter);
                     System.out.println(defDateTime.toString());
                     double value = readingValues.getDouble(timeString);
-                    Reading reading = new Reading();
                     reading.balizaId = dataType.getString("station");
-                    reading.name = dataType.getString("name");
-                    reading.dataType = dataType.getString("type");
-                    reading.reading = value;
+                    System.out.println(dataType.getString("name"));
+                    if (dataType.getString("name").equals("temperature")) {
+
+                        reading.temperature = value;
+
+                    } else if (dataType.getString("name").equals("humidity")) {
+
+                        reading.humidity = value;
+
+                    } else if (dataType.getString("name").equals("precipitation")) {
+
+                        reading.precipitation = value;
+
+                    } else if (dataType.getString("name").equals("irradiance")) {
+
+                        reading.irradiance = value;
+
+                    }
                     reading.datetime = defDateTime.toString(dateTimeFormatter);
-                    MainActivity.db.readingDao().insertAll(reading);
+                    System.out.println("READING IRRADIANCE "+reading.irradiance);
+                    System.out.println("READING HUMIDITY "+reading.humidity);
+                    System.out.println("READING TEMPERATURE "+reading.temperature);
+                    System.out.println("READING PRECIPITATION "+reading.precipitation);
+                    MainActivity.db.readingDao().insert(reading);
                 }
             }
         } catch (JSONException e) {

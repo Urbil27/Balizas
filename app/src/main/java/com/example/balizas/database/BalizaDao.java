@@ -15,8 +15,8 @@ public interface BalizaDao {
 
     @Query("SELECT * FROM baliza")
     LiveData<List<Baliza>> getAll();
-    @Query("SELECT * FROM baliza WHERE id IN (:userId)")
-    List<Baliza> loadAllByIds(String userId);
+    @Query("SELECT * FROM baliza WHERE id = :balizaId")
+    Baliza loadById(String balizaId);
 
     @Query("SELECT * FROM baliza WHERE id LIKE :first AND " +
             "name LIKE :last LIMIT 1")

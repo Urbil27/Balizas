@@ -94,6 +94,7 @@ public class BalizasFragment extends Fragment {
                 }
             }
         });
+
         buscador.addTextChangedListener(new TextWatcher() {
             List<Baliza> balizasToShow = new ArrayList<Baliza>();
             @Override
