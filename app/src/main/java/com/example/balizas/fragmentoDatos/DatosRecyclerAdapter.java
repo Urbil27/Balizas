@@ -14,6 +14,8 @@ import com.example.balizas.R;
 import com.example.balizas.database.Baliza;
 import com.example.balizas.database.Reading;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +52,7 @@ public class DatosRecyclerAdapter extends RecyclerView.Adapter<DatosRecyclerAdap
             tvBaliza = view.findViewById(R.id.textView);
             tvTemperature = view.findViewById(R.id.cifraTemperatura);
             tvHumidity = view.findViewById(R.id.cifraHumedad);
-            tvIrradiance = view.findViewById(R.id.cifraTemperatura);
+            tvIrradiance = view.findViewById(R.id.cifraIrradiance);
             tvPrecipitation = view.findViewById(R.id.cifraPrecipitacion);
             switch1 = view.findViewById(R.id.switch1);
         }
@@ -90,8 +92,23 @@ public class DatosRecyclerAdapter extends RecyclerView.Adapter<DatosRecyclerAdap
         Baliza baliza = balizas.get(position);
         TextView textViewNombreBaliza = holder.getTVBaliza();
         textViewNombreBaliza.setText(baliza.balizaName);
-       // Reading lastReading = LastReading.get(baliza.id,readings);
         TextView tvTemperature = holder.getTvTemperatura();
+        TextView tvHumidity = holder.getTvHumidity();
+        TextView tvPrecipitation = holder.getTvPrecipitation();
+        TextView tvIrradiance = holder.getTvIrradiance();
+
+        for(Reading reading : readings){
+            if(reading.balizaId.equals(baliza.id)){
+                tvTemperature.setText(reading.temperature+"");
+                tvHumidity.setText(reading.humidity+"");
+                tvPrecipitation.setText(reading.precipitation+"");
+                tvIrradiance.setText(reading.irradiance+"");
+            }
+        }
+
+
+
+
 
 
 

@@ -131,6 +131,7 @@ public class Parser {
                 public void run() {
                     Log.e("tenperatureee",reading.temperature+" h"+ reading.humidity+" i"+ reading.irradiance+" p"+ reading.precipitation+" date"+reading.datetime+" balizaid "+reading.balizaId);
                     MainActivity.db.readingDao().insertAll(reading);
+
                 }
             });
 
