@@ -23,21 +23,6 @@ import org.joda.time.DateTime;
         @ColumnInfo(name = "datetime")
         public String datetime;
 
-        @ColumnInfo(name = "mean_speed")
-        public double mean_speed;
-
-        @ColumnInfo(name = "mean_direction")
-        public double mean_direction;
-
-        @ColumnInfo(name = "max_speed")
-        public double max_speed;
-
-        @ColumnInfo(name = "speed_sigma")
-        public double speed_sigma;
-
-        @ColumnInfo(name = "direction_sigma")
-        public double direction_sigma;
-
         @ColumnInfo(name = "temperature")
         public double temperature;
 

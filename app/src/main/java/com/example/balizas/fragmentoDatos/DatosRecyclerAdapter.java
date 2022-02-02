@@ -1,31 +1,24 @@
 package com.example.balizas.fragmentoDatos;
 
 import android.content.Context;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.balizas.MainActivity;
 import com.example.balizas.R;
 import com.example.balizas.database.Baliza;
 import com.example.balizas.database.Reading;
-import com.example.balizas.etc.BalizaAndLastReading;
-import com.example.balizas.etc.LastReading;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-    private List<Baliza> balizas;
+public class DatosRecyclerAdapter extends RecyclerView.Adapter<DatosRecyclerAdapter.ViewHolder> {
+    private List<Baliza> balizas = new ArrayList<>();
 
 
     private Context context;
@@ -33,7 +26,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private List<Reading> readings;
 
-    public RecyclerAdapter(Context context){
+    public DatosRecyclerAdapter(Context context){
         this.balizas = balizas;
 
         this.context = context;
@@ -84,7 +77,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     @Override
-    public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DatosRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.recycler_datos, parent, false);
 
         return new ViewHolder(view);
@@ -92,11 +85,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
-        System.out.println("on bind view holder");
+    public void onBindViewHolder(@NonNull DatosRecyclerAdapter.ViewHolder holder, int position) {
+
         Baliza baliza = balizas.get(position);
         TextView textViewNombreBaliza = holder.getTVBaliza();
         textViewNombreBaliza.setText(baliza.balizaName);
+       // Reading lastReading = LastReading.get(baliza.id,readings);
+        TextView tvTemperature = holder.getTvTemperatura();
+
+
+
 
 
     }

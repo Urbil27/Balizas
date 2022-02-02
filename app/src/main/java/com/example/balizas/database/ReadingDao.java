@@ -20,9 +20,10 @@ public interface ReadingDao {
     void delete(Reading reading);
     @Query("DELETE FROM reading WHERE baliza_id = :balizaId" )
     void deleteReadingFromBaliza(String balizaId);
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+
+    @Insert()
     void insert(Reading reading);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert()
     void insertAll(Reading... readings);
 }

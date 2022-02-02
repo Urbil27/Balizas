@@ -1,10 +1,8 @@
 package com.example.balizas.fragmentoDatos;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,17 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.balizas.MainActivity;
 import com.example.balizas.R;
 import com.example.balizas.communication.euskalmet.ApiConnection;
 import com.example.balizas.database.Baliza;
 import com.example.balizas.database.Reading;
-import com.example.balizas.etc.BalizaAndLastReading;
-import com.example.balizas.etc.LastReading;
 import com.example.balizas.fragmentoBalizas.BalizasViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -76,16 +70,17 @@ public class DatosFragment extends Fragment {
         Handler handler = new Handler(handlerThread.getLooper());
         ApiConnection apiConnection = new ApiConnection(context);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        List<BalizaAndLastReading> balizasActivated = new ArrayList<>();
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(context);
+        List<Baliza> balizasActivated = new ArrayList<>();
+        DatosRecyclerAdapter recyclerAdapter = new DatosRecyclerAdapter(context);
         ReadingsViewModel readingsViewModel = new ReadingsViewModel();
         BalizasViewModel balizasViewModel = new BalizasViewModel();
-
+        recyclerView.setAdapter(recyclerAdapter);
         balizasViewModel.getActivatedBalizas().observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
 
             @Override
             public void onChanged(List<Baliza> balizas) {
-                System.out.println("Observer balizas activadas");
+
+
                 recyclerAdapter.setBalizas(balizas);
 
             }
@@ -93,6 +88,7 @@ public class DatosFragment extends Fragment {
         readingsViewModel.getReadings().observe(getViewLifecycleOwner(), new Observer<List<Reading>>() {
             @Override
             public void onChanged(List<Reading> readings) {
+                System.out.println("Observer readings");
                 recyclerAdapter.setReadings(readings);
             }
         });

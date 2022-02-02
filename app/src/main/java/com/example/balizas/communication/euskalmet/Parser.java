@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi;
 import com.example.balizas.MainActivity;
 import com.example.balizas.database.Baliza;
 import com.example.balizas.database.Reading;
+import com.example.balizas.etc.DateComparator;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -21,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -67,65 +69,85 @@ public class Parser {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void parseDatos(String data, DateTime day) {
+        System.out.println("Data is "+data);
         DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
         String dayString = day.toString(dateFormatter);
         DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
-
+        Reading reading = new Reading();
         try {
             JSONObject jsonObject = new JSONObject(data);
             Iterator<String> iterator = jsonObject.keys();
-            Reading reading = new Reading();
+            System.out.println("iterator "+ iterator.toString());
+
             while (iterator.hasNext()) {
                 String key = iterator.next();
                 System.out.println("The key is "+key);
+
                 JSONObject dataType = jsonObject.getJSONObject(key);
                 JSONObject readings = dataType.getJSONObject("data");
                 String readingsKey = readings.keys().next();
                 JSONObject readingValues = readings.getJSONObject(readingsKey);
                 Iterator<String> timeIterator = readingValues.keys();
-
-                while (timeIterator.hasNext()) {
-                    String timeString = timeIterator.next();
-                    String dateAndTime = day.toString(dateFormatter) + " " + timeString;
-                    DateTime defDateTime = DateTime.parse(dateAndTime, dateTimeFormatter);
-                    System.out.println(defDateTime.toString());
-                    double value = readingValues.getDouble(timeString);
-                    reading.balizaId = dataType.getString("station");
-                    System.out.println(dataType.getString("name"));
-                    switch(key){
-                        case "21":
-                            reading.temperature=value;
-                            Log.e("temperature",value+"");
-                            break;
-                        case "31":
-                            reading.humidity=value;
-                            Log.e("humidity",value+"");
-                            break;
-                        case "40":
-                            reading.precipitation=value;
-                            Log.e("precipitation",value+"");
-                            break;
-                        case "70":
-                            reading.irradiance=value;
-                            Log.e("irradiance",value+"");
-                            break;
-                    }
-
-                    reading.datetime = defDateTime.toString(dateTimeFormatter);
-
+                ArrayList<String> timeKeys = new ArrayList<String>();
+                while (timeIterator.hasNext()){
+                    timeKeys.add(timeIterator.next());
                 }
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        MainActivity.db.readingDao().insert(reading);
-                    }
-                });
+                Collections.sort(timeKeys);
+                String lastTimeKey = timeKeys.get(timeKeys.size()-1);
+
+                String dateAndTime = day.toString(dateFormatter) + " " + lastTimeKey;
+                DateTime defDateTime = DateTime.parse(dateAndTime, dateTimeFormatter);
+                System.out.println(defDateTime.toString());
+                double value = readingValues.getDouble(lastTimeKey);
+                System.out.println("value "+value);
+                reading.balizaId = dataType.getString("station");
+                System.out.println(dataType.getString("name"));
+                switch(key){
+                    case "21":
+                        reading.temperature=value;
+                        Log.e("temperature",reading.temperature+"");
+                        break;
+                    case "31":
+                        reading.humidity=value;
+                        Log.e("humidity",reading.humidity+"");
+                        break;
+                    case "40":
+                        reading.precipitation=value;
+                        Log.e("precipitation",reading.precipitation+"");
+                        break;
+                    case "70":
+                        reading.irradiance=value;
+                        Log.e("irradiance",reading.irradiance+"");
+                        break;
+                }
+
+                reading.datetime = defDateTime.toString(dateTimeFormatter);
+                Log.e("reading: t ",reading.temperature+" p "+reading.precipitation+" d "+reading.datetime);
+
+
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("tenperatureee",reading.temperature+" h"+ reading.humidity+" i"+ reading.irradiance+" p"+ reading.precipitation+" date"+reading.datetime+" balizaid "+reading.balizaId);
+                    MainActivity.db.readingDao().insertAll(reading);
+                }
+            });
+
+
+            } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
         }
+
     }
-
-
-
+    /*
+    private String getLastTimeKey(JSONObject jsonObject){
+            Iterator iterator = jsonObject.keys();
+            ArrayList<String> times = new ArrayList<String>();
+            while (iterator.hasNext()){
+                times.add((String) iterator.next());
+            }
+        Collections.sort(times, new DateComparator());
+    }
+*/
 }

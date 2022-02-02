@@ -1,6 +1,7 @@
 package com.example.balizas.fragmentoBalizas;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -77,13 +79,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
                 baliza.activated = isChecked;
                 handler.post(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void run() {
                         System.out.println("ID DE LA BALIZA:"+baliza.id);
                         MainActivity.db.balizaDao().update(baliza);
                         ApiConnection apiConnection = new ApiConnection(context.getApplicationContext());
                         if(!isChecked){
-                            MainActivity.db.readingDao().deleteReadingFromBaliza(baliza.id);
+                           MainActivity.db.readingDao().deleteReadingFromBaliza(baliza.id);
+                        }
+                        else{
+                            apiConnection.getBalizaReading(baliza.id);
                         }
                         System.out.println("Updated on database");
                     }
