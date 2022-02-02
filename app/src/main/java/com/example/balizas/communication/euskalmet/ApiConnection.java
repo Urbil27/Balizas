@@ -3,6 +3,8 @@ package com.example.balizas.communication.euskalmet;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -27,11 +29,15 @@ import java.util.Date;
 public class ApiConnection {
     Context context;
     RequestQueue queue;
+    HandlerThread handlerThread;
     Handler handler;
-    public ApiConnection(Context context, Handler handler) {
+    public ApiConnection(Context context) {
         this.context = context;
         queue = Volley.newRequestQueue(context);
         this.handler = handler;
+         handlerThread = new HandlerThread("HandlerThreadApiConnection");
+         handlerThread.start();
+         handler = new Handler(handlerThread.getLooper());
 
     }
 
@@ -58,13 +64,13 @@ public class ApiConnection {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void getBalizaReading(Baliza baliza) {
+    public void getBalizaReading(String balizaId) {
 
         LocalDateTime myDateObj;
         myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         String formattedDate = myDateObj.format(myFormatObj);
-        String myUrl = "https://euskalmet.euskadi.eus/vamet/stations/readings/" + baliza.id + "/" + formattedDate + "/readingsData.json";
+        String myUrl = "https://euskalmet.euskadi.eus/vamet/stations/readings/" + balizaId + "/" + formattedDate + "/readingsData.json";
         StringRequest myRequest = new StringRequest(Request.Method.GET, myUrl,
                 response -> {
 
@@ -78,7 +84,7 @@ public class ApiConnection {
                     });
 
                 },
-                volleyError -> Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_SHORT).show()
+                volleyError -> Log.e("Volley error:",volleyError.getMessage()+"")
         );
         queue.add(myRequest);
     }

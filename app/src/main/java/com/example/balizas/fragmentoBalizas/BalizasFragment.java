@@ -73,12 +73,12 @@ public class BalizasFragment extends Fragment {
         HandlerThread ht = new HandlerThread("thread");
         ht.start();
         Handler handler = new Handler(ht.getLooper());
-        ApiConnection euskalmet = new ApiConnection(context,handler);
+        ApiConnection euskalmet = new ApiConnection(context);
         euskalmet.getBalizas();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_balizas, container, false);
-        EditText buscador = view.findViewById(R.id.editTextBaliza);
-        buscador.setHint("Buscar...");
+
+
         RecyclerView rv = view.findViewById(R.id.rv);
         BalizasViewModel bvm = new BalizasViewModel();
         RecyclerAdapter ra = new RecyclerAdapter(context,balizas, handler);
@@ -95,33 +95,7 @@ public class BalizasFragment extends Fragment {
             }
         });
 
-        buscador.addTextChangedListener(new TextWatcher() {
-            List<Baliza> balizasToShow = new ArrayList<Baliza>();
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                System.out.println(s.toString());
-                for(Baliza baliza : balizas){
-                    System.out.println("Entro en el foreach");
-                    if(baliza.balizaName.equals(s.toString())){
-
-                        balizasToShow.add(baliza);
-                        System.out.println(baliza.balizaName);
-                    }
-                    ra.setBalizas(balizas);
-                    ra.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         return view;
     }
 

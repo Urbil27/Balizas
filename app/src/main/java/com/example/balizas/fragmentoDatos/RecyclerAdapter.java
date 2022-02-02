@@ -25,19 +25,20 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-    private List<BalizaAndLastReading> balizas;
+    private List<Baliza> balizas;
 
 
     private Context context;
     private LayoutInflater mInflater;
-    private Handler handler;
 
-    public RecyclerAdapter(Context context, List<BalizaAndLastReading> balizas, Handler handler){
+    private List<Reading> readings;
+
+    public RecyclerAdapter(Context context){
         this.balizas = balizas;
 
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
-        this.handler = handler;
+
     }
 
 
@@ -71,9 +72,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public Switch getSwitchBaliza(){return switch1;}
 
     }
-    public void setBalizas(List<BalizaAndLastReading> balizas){
+    public void setBalizas(List<Baliza> balizas){
+
         this.balizas = balizas;
-        this.notifyDataSetChanged();
+        notifyDataSetChanged();
+        System.out.println("entro en setbalizas");
+    }
+    public void setReadings(List<Reading> readings){
+        this.readings = readings;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -86,12 +93,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
-        BalizaAndLastReading baliza = balizas.get(position);
-        holder.getTVBaliza().setText(baliza.baliza.balizaName);
-        holder.getTvPrecipitation().setText(baliza.lastReading.precipitation+"");
-        holder.getTvIrradiance().setText(baliza.lastReading.irradiance+"");
-        holder.getTvHumidity().setText(baliza.lastReading.humidity+"");
-        holder.getTvTemperatura().setText(baliza.lastReading.temperature+"");
+        System.out.println("on bind view holder");
+        Baliza baliza = balizas.get(position);
+        TextView textViewNombreBaliza = holder.getTVBaliza();
+        textViewNombreBaliza.setText(baliza.balizaName);
 
 
     }

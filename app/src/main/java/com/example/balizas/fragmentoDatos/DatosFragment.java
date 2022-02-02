@@ -23,6 +23,7 @@ import com.example.balizas.database.Baliza;
 import com.example.balizas.database.Reading;
 import com.example.balizas.etc.BalizaAndLastReading;
 import com.example.balizas.etc.LastReading;
+import com.example.balizas.fragmentoBalizas.BalizasViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,36 +74,29 @@ public class DatosFragment extends Fragment {
         HandlerThread handlerThread = new HandlerThread("handlerThread");
         handlerThread.start();
         Handler handler = new Handler(handlerThread.getLooper());
-        ApiConnection apiConnection = new ApiConnection(context, handler);
+        ApiConnection apiConnection = new ApiConnection(context);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         List<BalizaAndLastReading> balizasActivated = new ArrayList<>();
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(context, balizasActivated, handler);
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(context);
+        ReadingsViewModel readingsViewModel = new ReadingsViewModel();
+        BalizasViewModel balizasViewModel = new BalizasViewModel();
 
-        ReadingsViewModel rvm = new ReadingsViewModel();
-        MainActivity.db.balizaDao().getAll().observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
+        balizasViewModel.getActivatedBalizas().observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
+
             @Override
             public void onChanged(List<Baliza> balizas) {
-                balizasActivated.clear();
-                for (Baliza baliza : balizas) {
-                    if (baliza.activated) {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                List<Reading> readingsOfBaliza = MainActivity.db.readingDao().getReadingFromBaliza(baliza.id);
-                                Reading lastReading = LastReading.get(baliza,readingsOfBaliza);
-                                balizasActivated.add(new BalizaAndLastReading(baliza,lastReading));
-                                apiConnection.getBalizaReading(baliza);
-                                recyclerView.setAdapter(recyclerAdapter);
-                            }
-                        });
-
-                    }
-                }
-                recyclerAdapter.setBalizas(balizasActivated);
+                System.out.println("Observer balizas activadas");
+                recyclerAdapter.setBalizas(balizas);
 
             }
         });
+        readingsViewModel.getReadings().observe(getViewLifecycleOwner(), new Observer<List<Reading>>() {
+            @Override
+            public void onChanged(List<Reading> readings) {
+                recyclerAdapter.setReadings(readings);
+            }
+        });
+
         return view;
     }
 }

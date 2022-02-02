@@ -18,8 +18,12 @@ public interface BalizaDao {
     @Query("SELECT * FROM baliza WHERE id = :balizaId")
     Baliza loadById(String balizaId);
 
+    @Query("SELECT * FROM baliza WHERE activated = 1")
+    LiveData<List<Baliza>> getActivated();
+
     @Query("SELECT * FROM baliza WHERE id LIKE :first AND " +
             "name LIKE :last LIMIT 1")
+
     Baliza findByName(String first, String last);
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(Baliza... balizas);

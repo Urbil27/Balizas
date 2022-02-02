@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.balizas.MainActivity;
 import com.example.balizas.R;
+import com.example.balizas.communication.euskalmet.ApiConnection;
 import com.example.balizas.database.Baliza;
 
 import java.util.ArrayList;
@@ -64,7 +65,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
         Baliza baliza = balizas.get(position);
         holder.getTVBaliza().setText(baliza.balizaName);
         Switch switch1 = holder.getSwitchBaliza();
@@ -81,9 +81,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     public void run() {
                         System.out.println("ID DE LA BALIZA:"+baliza.id);
                         MainActivity.db.balizaDao().update(baliza);
+                        ApiConnection apiConnection = new ApiConnection(context.getApplicationContext());
+                        if(!isChecked){
+                            MainActivity.db.readingDao().deleteReadingFromBaliza(baliza.id);
+                        }
                         System.out.println("Updated on database");
                     }
                 });
+
             }
         });
 

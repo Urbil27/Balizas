@@ -19,9 +19,11 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.joda.time.*;
 
@@ -75,11 +77,13 @@ public class Parser {
             Reading reading = new Reading();
             while (iterator.hasNext()) {
                 String key = iterator.next();
+                System.out.println("The key is "+key);
                 JSONObject dataType = jsonObject.getJSONObject(key);
                 JSONObject readings = dataType.getJSONObject("data");
                 String readingsKey = readings.keys().next();
                 JSONObject readingValues = readings.getJSONObject(readingsKey);
                 Iterator<String> timeIterator = readingValues.keys();
+
                 while (timeIterator.hasNext()) {
                     String timeString = timeIterator.next();
                     String dateAndTime = day.toString(dateFormatter) + " " + timeString;
@@ -88,37 +92,40 @@ public class Parser {
                     double value = readingValues.getDouble(timeString);
                     reading.balizaId = dataType.getString("station");
                     System.out.println(dataType.getString("name"));
-                    if (dataType.getString("name").equals("temperature")) {
-
-                        reading.temperature = value;
-
-                    } else if (dataType.getString("name").equals("humidity")) {
-
-                        reading.humidity = value;
-
-                    } else if (dataType.getString("name").equals("precipitation")) {
-
-                        reading.precipitation = value;
-
-                    } else if (dataType.getString("name").equals("irradiance")) {
-
-                        reading.irradiance = value;
-
+                    switch(key){
+                        case "21":
+                            reading.temperature=value;
+                            Log.e("temperature",value+"");
+                            break;
+                        case "31":
+                            reading.humidity=value;
+                            Log.e("humidity",value+"");
+                            break;
+                        case "40":
+                            reading.precipitation=value;
+                            Log.e("precipitation",value+"");
+                            break;
+                        case "70":
+                            reading.irradiance=value;
+                            Log.e("irradiance",value+"");
+                            break;
                     }
+
                     reading.datetime = defDateTime.toString(dateTimeFormatter);
-                    System.out.println("READING IRRADIANCE "+reading.irradiance);
-                    System.out.println("READING HUMIDITY "+reading.humidity);
-                    System.out.println("READING TEMPERATURE "+reading.temperature);
-                    System.out.println("READING PRECIPITATION "+reading.precipitation);
-                    MainActivity.db.readingDao().insert(reading);
+
                 }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.db.readingDao().insert(reading);
+                    }
+                });
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void parseJsonArray(String data) {
 
-    }
+
 }
