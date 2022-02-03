@@ -141,14 +141,5 @@ public class Parser {
         }
 
     }
-    /*
-    private String getLastTimeKey(JSONObject jsonObject){
-            Iterator iterator = jsonObject.keys();
-            ArrayList<String> times = new ArrayList<String>();
-            while (iterator.hasNext()){
-                times.add((String) iterator.next());
-            }
-        Collections.sort(times, new DateComparator());
-    }
-*/
+
 }

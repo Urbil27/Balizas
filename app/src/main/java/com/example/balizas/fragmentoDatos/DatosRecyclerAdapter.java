@@ -99,8 +99,8 @@ public class DatosRecyclerAdapter extends RecyclerView.Adapter<DatosRecyclerAdap
 
         for(Reading reading : readings){
             if(reading.balizaId.equals(baliza.id)){
-                tvTemperature.setText(reading.temperature+"");
-                tvHumidity.setText(reading.humidity+"");
+                tvTemperature.setText(reading.temperature+"ºC");
+                tvHumidity.setText(reading.humidity+"%");
                 tvPrecipitation.setText(reading.precipitation+"");
                 tvIrradiance.setText(reading.irradiance+"");
             }

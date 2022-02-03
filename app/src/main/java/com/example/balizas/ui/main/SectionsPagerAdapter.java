@@ -44,7 +44,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 fragment = new DatosFragment(mContext);
                 break;
             case 2:
-                fragment = new MapsFragment();
+                fragment = new MapsFragment(mContext);
                 break;
         }
         return fragment;

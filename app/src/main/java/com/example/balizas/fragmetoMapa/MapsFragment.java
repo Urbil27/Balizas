@@ -2,9 +2,12 @@ package com.example.balizas.fragmetoMapa;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -12,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.balizas.communication.euskalmet.ApiConnection;
 import com.example.balizas.fragmentoBalizas.BalizasViewModel;
 import com.example.balizas.MainActivity;
 import com.example.balizas.R;
@@ -29,18 +33,17 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MapsFragment extends Fragment {
+    Context context;
+    ApiConnection apiConnection;
+
+    public MapsFragment(Context context) {
+        this.context = context;
+        apiConnection = new ApiConnection(context);
+    }
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
+
         HashMap<Marker, Baliza> balizasGuardadas = new HashMap<Marker, Baliza>();
 
         @Override
@@ -53,22 +56,23 @@ public class MapsFragment extends Fragment {
 
                     if (balizas != null) {
                         for (Baliza b : balizas) {
-                            LatLng sydney = new LatLng(b.y, b.x);
+                            LatLng location = new LatLng(b.y, b.x);
                             if (b.activated) {
-                                Marker marker = googleMap.addMarker(new MarkerOptions().position(sydney)
+                                Marker marker = googleMap.addMarker(new MarkerOptions().position(location)
                                         .title(b.balizaName).icon(BitmapDescriptorFactory
                                                 .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                                 balizasGuardadas.put(marker, b);
 
                             } else {
-                                Marker marker = googleMap.addMarker(new MarkerOptions().position(sydney)
+                                Marker marker = googleMap.addMarker(new MarkerOptions().position(location)
                                         .title(b.balizaName));
                                 balizasGuardadas.put(marker, b);
                             }
-                            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
                         }
                         LatLng loc = new LatLng(43.035827, -2.473771);
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 8), 5000, null);;
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 8), 5000, null);
+                        ;
                         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(@NonNull Marker marker) {
@@ -83,9 +87,12 @@ public class MapsFragment extends Fragment {
                                     baliza.activated = true;
                                 }
                                 cargadorBaliza.post(new Runnable() {
+                                    @RequiresApi(api = Build.VERSION_CODES.O)
                                     @Override
                                     public void run() {
                                         MainActivity.db.balizaDao().update(baliza);
+
+                                        apiConnection.getBalizaReading(baliza.id);
                                     }
                                 });
                                 return false;
@@ -96,6 +103,7 @@ public class MapsFragment extends Fragment {
                 }
             });
         }
+
     };
 
     @Nullable

@@ -43,6 +43,7 @@ public class BalizasFragment extends Fragment {
 
     private List<Baliza> balizas = new ArrayList<>();
     private Context context;
+    private ApiConnection euskalmet;
     public BalizasFragment() {
         // Required empty public constructor
     }
@@ -73,7 +74,10 @@ public class BalizasFragment extends Fragment {
         HandlerThread ht = new HandlerThread("thread");
         ht.start();
         Handler handler = new Handler(ht.getLooper());
-        ApiConnection euskalmet = new ApiConnection(context);
+        if(euskalmet == null){
+            euskalmet = new ApiConnection(context);
+        }
+
         euskalmet.getBalizas();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_balizas, container, false);

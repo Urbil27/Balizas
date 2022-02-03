@@ -36,7 +36,7 @@ public class DatosFragment extends Fragment {
     private String mParam2;
     private Context context;
     private List<Reading> readings;
-
+    private ApiConnection apiConnection;
     public DatosFragment() {
         // Required empty public constructor
     }
@@ -68,7 +68,9 @@ public class DatosFragment extends Fragment {
         HandlerThread handlerThread = new HandlerThread("handlerThread");
         handlerThread.start();
         Handler handler = new Handler(handlerThread.getLooper());
-        ApiConnection apiConnection = new ApiConnection(context);
+        if(apiConnection == null){
+            apiConnection = new ApiConnection(context);
+        }
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         List<Baliza> balizasActivated = new ArrayList<>();
         DatosRecyclerAdapter recyclerAdapter = new DatosRecyclerAdapter(context);
