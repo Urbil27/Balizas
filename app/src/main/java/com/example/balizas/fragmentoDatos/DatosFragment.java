@@ -23,35 +23,19 @@ import com.example.balizas.fragmentoBalizas.BalizasViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DatosFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DatosFragment extends Fragment {
 
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private Context context;
-    private List<Reading> readings;
     private ApiConnection apiConnection;
     public DatosFragment() {
-        // Required empty public constructor
+
     }
 
     public DatosFragment(Context context) {
         this.context = context;
     }
 
-    public static DatosFragment newInstance(String param1, String param2) {
-        DatosFragment fragment = new DatosFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,37 +45,37 @@ public class DatosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_datos, container, false);
-        System.out.println("Entro al oncreateview");
         RecyclerView recyclerView = view.findViewById(R.id.recyclerDatos);
-        HandlerThread handlerThread = new HandlerThread("handlerThread");
-        handlerThread.start();
-        Handler handler = new Handler(handlerThread.getLooper());
+
         if(apiConnection == null){
+
             apiConnection = new ApiConnection(context);
+
         }
+
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        List<Baliza> balizasActivated = new ArrayList<>();
         DatosRecyclerAdapter recyclerAdapter = new DatosRecyclerAdapter(context);
         ReadingsViewModel readingsViewModel = new ReadingsViewModel();
         BalizasViewModel balizasViewModel = new BalizasViewModel();
         recyclerView.setAdapter(recyclerAdapter);
+
         balizasViewModel.getActivatedBalizas().observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
 
             @Override
             public void onChanged(List<Baliza> balizas) {
 
-
                 recyclerAdapter.setBalizas(balizas);
 
             }
         });
+
         readingsViewModel.getReadings().observe(getViewLifecycleOwner(), new Observer<List<Reading>>() {
             @Override
             public void onChanged(List<Reading> readings) {
-                System.out.println("Observer readings");
+
                 recyclerAdapter.setReadings(readings);
+
             }
         });
 

@@ -17,4 +17,7 @@ public class BalizasViewModel extends ViewModel {
     public LiveData<List<Baliza>> getActivatedBalizas() {
         return MainActivity.db.balizaDao().getActivated();
     }
+    public List<Baliza> getNowActivated(){
+        return MainActivity.db.balizaDao().getNowActivated();
+    }
 }

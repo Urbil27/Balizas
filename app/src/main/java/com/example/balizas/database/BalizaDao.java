@@ -21,6 +21,9 @@ public interface BalizaDao {
     @Query("SELECT * FROM baliza WHERE activated = 1")
     LiveData<List<Baliza>> getActivated();
 
+    @Query("SELECT * FROM baliza WHERE activated = 1")
+    List<Baliza> getNowActivated();
+
     @Query("SELECT * FROM baliza WHERE id LIKE :first AND " +
             "name LIKE :last LIMIT 1")
 

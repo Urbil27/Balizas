@@ -44,6 +44,7 @@ public class BalizasFragment extends Fragment {
     private List<Baliza> balizas = new ArrayList<>();
     private Context context;
     private ApiConnection euskalmet;
+
     public BalizasFragment() {
         // Required empty public constructor
     }
@@ -71,28 +72,28 @@ public class BalizasFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        HandlerThread ht = new HandlerThread("thread");
+
+        HandlerThread ht = new HandlerThread("BalizasSetter");
         ht.start();
+
         Handler handler = new Handler(ht.getLooper());
-        if(euskalmet == null){
+        if (euskalmet == null) {
             euskalmet = new ApiConnection(context);
         }
 
         euskalmet.getBalizas();
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_balizas, container, false);
-
-
         RecyclerView rv = view.findViewById(R.id.rv);
         BalizasViewModel bvm = new BalizasViewModel();
-        RecyclerAdapter ra = new RecyclerAdapter(context,balizas, handler);
+        RecyclerAdapter ra = new RecyclerAdapter(context, balizas, handler);
         rv.setLayoutManager(new LinearLayoutManager(context));
         rv.setAdapter(ra);
 
         bvm.getBalizas().observe(getViewLifecycleOwner(), new Observer<List<Baliza>>() {
             @Override
             public void onChanged(List<Baliza> balizas) {
-                if(balizas != null){
+                if (balizas != null) {
                     ra.setBalizas(balizas);
                     ra.notifyDataSetChanged();
                 }

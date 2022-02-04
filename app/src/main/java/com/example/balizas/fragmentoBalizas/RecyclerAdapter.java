@@ -31,7 +31,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private LayoutInflater mInflater;
     private Handler handler;
 
-    public RecyclerAdapter(Context context, List<Baliza> balizas, Handler handler){
+    public RecyclerAdapter(Context context, List<Baliza> balizas, Handler handler) {
         this.balizas = balizas;
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
@@ -39,24 +39,31 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-       private final TextView tvBaliza;
-       private final Switch switch1;
+        private final TextView tvBaliza;
+        private final Switch switch1;
         public View view;
+
         public ViewHolder(View view) {
             super(view);
             this.view = view;
             tvBaliza = view.findViewById(R.id.textView);
             switch1 = view.findViewById(R.id.switch1);
         }
+
         //Devuelve el textview del nombre de la baliza
-        public TextView getTVBaliza(){
+        public TextView getTVBaliza() {
             return tvBaliza;
         }
-        public Switch getSwitchBaliza(){return switch1;}
+
+        public Switch getSwitchBaliza() {
+            return switch1;
+        }
     }
-    public void setBalizas(List<Baliza> balizas){
+
+    public void setBalizas(List<Baliza> balizas) {
         this.balizas = balizas;
     }
+
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.recycler_balizas, parent, false);
@@ -82,16 +89,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void run() {
-                        System.out.println("ID DE LA BALIZA:"+baliza.id);
                         MainActivity.db.balizaDao().update(baliza);
                         ApiConnection apiConnection = new ApiConnection(context.getApplicationContext());
-                        if(!isChecked){
-                           MainActivity.db.readingDao().deleteReadingFromBaliza(baliza.id);
-                        }
-                        else{
+                        if (!isChecked) {
+                            MainActivity.db.readingDao().deleteReadingFromBaliza(baliza.id);
+                        } else {
                             apiConnection.getBalizaReading(baliza.id);
                         }
-                        System.out.println("Updated on database");
                     }
                 });
 
@@ -99,7 +103,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         });
 
     }
-    @Override public int getItemViewType(int position) { return position; }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
 
     @Override

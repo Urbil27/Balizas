@@ -5,10 +5,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
-import android.widget.Toast;
-
 import androidx.annotation.RequiresApi;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -16,15 +13,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.balizas.database.Baliza;
-
 import org.joda.time.DateTime;
 import org.json.JSONArray;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
 
 public class ApiConnection {
     Context context;
@@ -34,16 +26,15 @@ public class ApiConnection {
     public ApiConnection(Context context) {
         this.context = context;
         queue = Volley.newRequestQueue(context);
-        this.handler = handler;
-         handlerThread = new HandlerThread("HandlerThreadApiConnection");
-         handlerThread.start();
-         handler = new Handler(handlerThread.getLooper());
+        handlerThread = new HandlerThread("HandlerThreadApiConnection");
+        handlerThread.start();
+        handler = new Handler(handlerThread.getLooper());
 
     }
 
     public void getBalizas() {
         String url = "https://www.euskalmet.euskadi.eus/vamet/stations/stationList/stationList.json";
-        JSONArray balizas;
+
         JsonArrayRequest stringRequest = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -58,7 +49,6 @@ public class ApiConnection {
             }
         });
 
-
         queue.add(stringRequest);
 
     }
@@ -71,6 +61,7 @@ public class ApiConnection {
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         String formattedDate = myDateObj.format(myFormatObj);
         String myUrl = "https://euskalmet.euskadi.eus/vamet/stations/readings/" + balizaId + "/" + formattedDate + "/readingsData.json";
+
         StringRequest myRequest = new StringRequest(Request.Method.GET, myUrl,
                 response -> {
 
@@ -86,6 +77,7 @@ public class ApiConnection {
                 },
                 volleyError -> Log.e("Volley error:",volleyError.getMessage()+"")
         );
+
         queue.add(myRequest);
     }
 }

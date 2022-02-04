@@ -20,23 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatosRecyclerAdapter extends RecyclerView.Adapter<DatosRecyclerAdapter.ViewHolder> {
+
     private List<Baliza> balizas = new ArrayList<>();
-
-
     private Context context;
     private LayoutInflater mInflater;
-
     private List<Reading> readings;
 
-    public DatosRecyclerAdapter(Context context){
-        this.balizas = balizas;
+    public DatosRecyclerAdapter(Context context) {
 
+        this.balizas = balizas;
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
 
     }
-
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvBaliza;
@@ -44,8 +40,8 @@ public class DatosRecyclerAdapter extends RecyclerView.Adapter<DatosRecyclerAdap
         private final TextView tvHumidity;
         private final TextView tvIrradiance;
         private final TextView tvPrecipitation;
-        private final Switch switch1;
         public View view;
+
         public ViewHolder(View view) {
             super(view);
             this.view = view;
@@ -54,26 +50,38 @@ public class DatosRecyclerAdapter extends RecyclerView.Adapter<DatosRecyclerAdap
             tvHumidity = view.findViewById(R.id.cifraHumedad);
             tvIrradiance = view.findViewById(R.id.cifraIrradiance);
             tvPrecipitation = view.findViewById(R.id.cifraPrecipitacion);
-            switch1 = view.findViewById(R.id.switch1);
+
         }
-        //Devuelve el textview del nombre de la baliza
-        public TextView getTVBaliza(){
+
+        public TextView getTVBaliza() {
             return tvBaliza;
         }
-        public TextView getTvTemperatura(){return tvTemperature;}
-        public TextView getTvHumidity(){return tvHumidity;}
-        public TextView getTvIrradiance(){return tvIrradiance;}
-        public TextView getTvPrecipitation(){return tvPrecipitation;}
-        public Switch getSwitchBaliza(){return switch1;}
+
+        public TextView getTvTemperatura() {
+            return tvTemperature;
+        }
+
+        public TextView getTvHumidity() {
+            return tvHumidity;
+        }
+
+        public TextView getTvIrradiance() {
+            return tvIrradiance;
+        }
+
+        public TextView getTvPrecipitation() {
+            return tvPrecipitation;
+        }
 
     }
-    public void setBalizas(List<Baliza> balizas){
+
+    public void setBalizas(List<Baliza> balizas) {
 
         this.balizas = balizas;
         notifyDataSetChanged();
-        System.out.println("entro en setbalizas");
     }
-    public void setReadings(List<Reading> readings){
+
+    public void setReadings(List<Reading> readings) {
         this.readings = readings;
         notifyDataSetChanged();
     }
@@ -97,25 +105,22 @@ public class DatosRecyclerAdapter extends RecyclerView.Adapter<DatosRecyclerAdap
         TextView tvPrecipitation = holder.getTvPrecipitation();
         TextView tvIrradiance = holder.getTvIrradiance();
 
-        for(Reading reading : readings){
-            if(reading.balizaId.equals(baliza.id)){
-                tvTemperature.setText(reading.temperature+"ºC");
-                tvHumidity.setText(reading.humidity+"%");
-                tvPrecipitation.setText(reading.precipitation+"");
-                tvIrradiance.setText(reading.irradiance+"");
+        for (Reading reading : readings) {
+            if (reading.balizaId.equals(baliza.id)) {
+                tvTemperature.setText(reading.temperature + "ºC");
+                tvHumidity.setText(reading.humidity + "%");
+                tvPrecipitation.setText(reading.precipitation + "");
+                tvIrradiance.setText(reading.irradiance + "");
             }
         }
 
 
-
-
-
-
-
-
-
     }
-    @Override public int getItemViewType(int position) { return position; }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
 
     @Override

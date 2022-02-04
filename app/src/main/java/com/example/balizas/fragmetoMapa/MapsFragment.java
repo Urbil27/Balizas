@@ -43,7 +43,6 @@ public class MapsFragment extends Fragment {
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
-
         HashMap<Marker, Baliza> balizasGuardadas = new HashMap<Marker, Baliza>();
 
         @Override
@@ -55,8 +54,10 @@ public class MapsFragment extends Fragment {
                 public void onChanged(List<Baliza> balizas) {
 
                     if (balizas != null) {
+
                         for (Baliza b : balizas) {
                             LatLng location = new LatLng(b.y, b.x);
+
                             if (b.activated) {
                                 Marker marker = googleMap.addMarker(new MarkerOptions().position(location)
                                         .title(b.balizaName).icon(BitmapDescriptorFactory
@@ -70,9 +71,10 @@ public class MapsFragment extends Fragment {
                             }
 
                         }
+
                         LatLng loc = new LatLng(43.035827, -2.473771);
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 8), 5000, null);
-                        ;
+
                         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(@NonNull Marker marker) {
@@ -86,15 +88,18 @@ public class MapsFragment extends Fragment {
                                 } else {
                                     baliza.activated = true;
                                 }
+
                                 cargadorBaliza.post(new Runnable() {
                                     @RequiresApi(api = Build.VERSION_CODES.O)
                                     @Override
                                     public void run() {
-                                        MainActivity.db.balizaDao().update(baliza);
 
+                                        MainActivity.db.balizaDao().update(baliza);
                                         apiConnection.getBalizaReading(baliza.id);
+
                                     }
                                 });
+
                                 return false;
                             }
 
